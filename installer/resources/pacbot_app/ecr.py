@@ -15,12 +15,13 @@ class APIEcrRepository(ECRRepository):
     name = "microservices"
 
     def pre_terraform_apply(self):
-        status, msg = create_iam_service_linked_role(
-            "ecs.amazonaws.com",
-            Settings.RESOURCE_DESCRIPTION,
-            Settings.AWS_AUTH_CRED)
+        pass
+        # status, msg = create_iam_service_linked_role(
+        #     "ecs.amazonaws.com",
+        #     Settings.RESOURCE_DESCRIPTION,
+        #     Settings.AWS_AUTH_CRED)
 
-        SysLog().write_debug_log("ECS IAM Service Linked role creation: Status:%s, Message: %s" % (str(status), msg))
+        # SysLog().write_debug_log("ECS IAM Service Linked role creation: Status:%s, Message: %s" % (str(status), msg))
 
 
 class UIEcrRepository(ECRRepository):

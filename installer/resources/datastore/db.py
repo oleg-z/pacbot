@@ -62,9 +62,10 @@ class MySQLDatabase(RDSResource):
             }
 
     def pre_terraform_apply(self):
-        status, msg = create_iam_service_linked_role(
-            "rds.amazonaws.com",
-            Settings.RESOURCE_DESCRIPTION,
-            Settings.AWS_AUTH_CRED)
+        pass
+        # status, msg = create_iam_service_linked_role(
+        #     "rds.amazonaws.com",
+        #     Settings.RESOURCE_DESCRIPTION,
+        #     Settings.AWS_AUTH_CRED)
 
-        SysLog().write_debug_log("RDS IAM Service Linked role creation: Status:%s, Message: %s" % (str(status), msg))
+        # SysLog().write_debug_log("RDS IAM Service Linked role creation: Status:%s, Message: %s" % (str(status), msg))
