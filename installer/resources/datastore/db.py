@@ -9,12 +9,12 @@ import base64
 class DBOptionGroup(RDSOptionGroupResource):
     name = "mysql"
     engine_name = "mysql"
-    major_engine_version = "5.6"
+    major_engine_version = "5.7"
 
 
 class DBParameterGroup(RDSParameterGroupResource):
     name = "mysql"
-    family = "mysql5.6"
+    family = "mysql5.7"
 
 
 class DBSubnetGroup(RDSSubnetGroupResource):
@@ -28,7 +28,7 @@ class MySQLDatabase(RDSResource):
     identifier = "data"
     storage_type = "gp2"
     engine = "mysql"
-    engine_version = "5.6.40"
+    engine_version = "5.7.37"
     allocated_storage = 10
     username = "pacbot"
     password = "***REMOVED***"
