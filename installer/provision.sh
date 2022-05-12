@@ -96,8 +96,8 @@ elif [ "$package_manager" = "apt" ]; then
     $SUDO apt-get install --no-install-recommends -y mysql-client
 
     $SUDO apt -y install unzip
-    wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
-    unzip terraform_0.11.10_linux_amd64.zip
+    curl -o terraform.zip https://releases.hashicorp.com/terraform/0.11.15/terraform_0.11.15_linux_amd64.zip
+    unzip terraform.zip
     $SUDO mv terraform /usr/bin
 
     echo alias cdd=\"cd $(pwd)\" >> ~/.bashrc
@@ -111,6 +111,6 @@ elif [ "$package_manager" = "apt" ]; then
     python3 -m venv ~/envs/pacbot_env
     source ~/envs/pacbot_env/bin/activate
     echo source ~/envs/pacbot_env/bin/activate >> ~/.bashrc
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 fi
 
