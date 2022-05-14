@@ -87,7 +87,7 @@ class SystemValidation(MsgMixin, metaclass=ABCMeta):
             boolean: True if all policies are present else False
         """
         aws_auth_option = Settings.AWS_AUTH_CRED['aws_auth_option']
-        status = self.validate_user_policies() if aws_auth_option == 1 else self.validate_role_policies()
+        status = self.validate_user_policies() if aws_auth_option in [1, 4] else self.validate_role_policies()
 
         if not status:
             yes_or_no = input("\n\t%s: " % self._input_message_in_color(K.POLICY_YES_NO))

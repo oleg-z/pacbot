@@ -61,14 +61,13 @@ class ESDomain(ElasticsearchDomainResource):
     def get_es_port(cls):
         return 80
 
-    def pre_terraform_apply(self):
-        pass
-        # status, msg = create_iam_service_linked_role(
-        #     "es.amazonaws.com",
-        #     Settings.RESOURCE_DESCRIPTION,
-        #     Settings.AWS_AUTH_CRED)
+    def pre_terraform_apply(self):        
+        status, msg = create_iam_service_linked_role(
+            "es.amazonaws.com",
+            Settings.RESOURCE_DESCRIPTION,
+            Settings.AWS_AUTH_CRED)
 
-        # SysLog().write_debug_log("ElasticSearch IAM Service Linked role creation: Status:%s, Message: %s" % (str(status), msg))
+        SysLog().write_debug_log("ElasticSearch IAM Service Linked role creation: Status:%s, Message: %s" % (str(status), msg))
 
     def render_output(self, outputs):
         if self.resource_in_tf_output(outputs):

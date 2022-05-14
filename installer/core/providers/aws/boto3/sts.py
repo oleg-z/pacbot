@@ -15,7 +15,6 @@ def get_sts_client(aws_auth_cred):
     """
     return prepare_aws_client_with_given_cred('sts', aws_auth_cred)
 
-
 def generate_temp_credentials(assume_role_arn, region_name):
     response = boto3.client(
         "sts",
@@ -26,6 +25,13 @@ def generate_temp_credentials(assume_role_arn, region_name):
     )
 
     return response['Credentials']
+
+def generate_profile_credentials(region, profile):
+    credentials = boto3.Session(region_name=region, profile_name=profile).get_credentials().get_frozen_credentials()
+    return {
+        "aws_access_key": credentials.access_key,
+        "aws_secret_key": credentials.secret_key
+    }
 
 
 def get_aws_caller_identity(aws_auth_cred):

@@ -5,7 +5,7 @@ def prepare_aws_client_with_given_cred(service_name, aws_auth_cred=None):
     auth_data = {}
 
     if aws_auth_cred:
-        if aws_auth_cred['aws_auth_option'] == 1:
+        if aws_auth_cred['aws_auth_option'] in [1, 4]:
             auth_data['aws_access_key_id'] = aws_auth_cred['aws_access_key']
             auth_data['aws_secret_access_key'] = aws_auth_cred['aws_secret_key']
         elif aws_auth_cred['aws_auth_option'] == 2:
@@ -22,7 +22,7 @@ def prepare_aws_resource_with_given_cred(service_name, aws_auth_cred=None):
     auth_data = {}
 
     if aws_auth_cred:
-        if aws_auth_cred['aws_auth_option'] == 1:
+        if aws_auth_cred['aws_auth_option'] in [1, 4]:
             auth_data['aws_access_key_id'] = aws_auth_cred['aws_access_key']
             auth_data['aws_secret_access_key'] = aws_auth_cred['aws_secret_key']
         elif aws_auth_cred['aws_auth_option'] == 2:

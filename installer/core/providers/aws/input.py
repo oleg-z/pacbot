@@ -2,7 +2,7 @@ from abc import ABCMeta
 from core.config import Settings
 from core.mixins import MsgMixin
 from core import constants as K
-from core.providers.aws.boto3.sts import get_aws_caller_identity
+from core.providers.aws.boto3.sts import generate_profile_credentials, get_aws_caller_identity
 from core.providers.aws.boto3.sts import generate_temp_credentials
 import uuid
 
@@ -30,6 +30,12 @@ class SystemInput(MsgMixin, metaclass=ABCMeta):
                 self.AWS_AUTH_CRED['assume_role_arn'],
                 self.AWS_AUTH_CRED['aws_region']
             )
+        elif self.AWS_AUTH_CRED['aws_auth_option'] == 4:
+            self.AWS_AUTH_CRED['aws_profile'] = self.read_aws_profile()
+            credentials = generate_profile_credentials(profile=self.AWS_AUTH_CRED['aws_profile'], region=self.AWS_AUTH_CRED['aws_region'])
+            self.AWS_AUTH_CRED['aws_access_key'] = credentials['aws_access_key']
+            self.AWS_AUTH_CRED['aws_secret_key'] = credentials['aws_secret_key']
+            
 
         Settings.set('AWS_AUTH_CRED', self.AWS_AUTH_CRED)
 
@@ -37,10 +43,10 @@ class SystemInput(MsgMixin, metaclass=ABCMeta):
         self.show_step_finish(K.INPUT_READING_COMPLETED)
 
     def read_aws_auth_mechanism(self):
+        auth_mechanism = getattr(Settings, 'AWS_AUTH_MECHANISM', None)
+        if auth_mechanism in [1, 2, 3, 4]:
+            return auth_mechanism
         if self.silent_install:
-            auth_mechanism = getattr(Settings, 'AWS_AUTH_MECHANISM', None)
-            if auth_mechanism in [1, 2, 3]:
-                return auth_mechanism
             self.show_step_inner_error(K.AWS_AUTH_MECHANISM_NOT_SUPPLIED)
             raise Exception(K.AWS_AUTH_MECHANISM_NOT_SUPPLIED)
 
@@ -49,8 +55,9 @@ class SystemInput(MsgMixin, metaclass=ABCMeta):
             self.show_inner_inline_message("\n\t%s" % K.AWS_WITH_KEYS)
             self.show_inner_inline_message("\n\t%s" % K.AWS_WITH_ASSUME_ROLE)
             self.show_inner_inline_message("\n\t%s" % K.AWS_WITH_EC2_ROLE)
+            self.show_inner_inline_message("\n\t%s" % K.AWS_WITH_PROFILE)
             auth_mechanism = int(input("\n\t%s" % K.AWS_CHOOSE_AUTH_OPTION))
-            if auth_mechanism in [1, 2, 3]:
+            if auth_mechanism in [1, 2, 3, 4]:
                 break
 
             self.show_step_inner_warning(K.AWS_INCORRECT_MECHANISM)
@@ -105,6 +112,22 @@ class SystemInput(MsgMixin, metaclass=ABCMeta):
             assume_role_arn = settings_assume_role_arn
 
         return assume_role_arn
+    
+    def read_aws_profile(self):
+        """Read AWS profile from user if it is not already set in settings"""
+        settings_aws_profile = getattr(Settings, 'AWS_PROFILE', None)
+        
+        if settings_aws_profile is None or settings_aws_profile == '':
+            if self.silent_install:
+                self.show_step_inner_error(K.AWS_PROFILE_NOT_SUPPLIED)
+                raise Exception(K.AWS_PROFILE_NOT_SUPPLIED)
+
+            aws_profile = input("\n\t%s" % K.AWS_PROFILE_INPUT)
+        else:
+            aws_profile = settings_aws_profile
+
+        return aws_profile
+
 
     def read_aws_region(self):
         """Read AWS region from user if it is not already set in settings"""
