@@ -19,6 +19,7 @@ LOADER_FILE_PATH = os.path.join(str(CURRENT_FILE_PATH), "loader")
 #     }
 # ]
 
+SKIP_TOOLS_CHECK = False
 TOOLS_REQUIRED = {
     'Maven': "mvn --version",
     'Git': "git --version",
