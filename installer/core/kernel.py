@@ -72,6 +72,10 @@ class Executor(MsgMixin):
         Returns:
             Boolean: Return True if all tools are available else False
         """
+
+        if Settings.SKIP_TOOLS_CHECK is True:
+            return True
+
         self.show_step_heading(K.TOOLS_CHECK_STARTED)
         tools_required = Settings.TOOLS_REQUIRED
         tools_available = True
